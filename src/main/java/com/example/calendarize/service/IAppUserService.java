@@ -5,7 +5,6 @@ import com.example.calendarize.dto.AppUserDto;
 import java.util.List;
 
 public interface IAppUserService {
-    AppUserDto createAccount(AppUserDto dto);
     AppUserDto updateAccount(AppUserDto dto);
     AppUserDto deleteAccount(AppUserDto dto);
     AppUserDto deleteAccount(String email);

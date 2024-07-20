@@ -25,23 +25,6 @@ public class AppUserServiceImpl implements IAppUserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Override
-    @Transactional
-    public AppUserDto createAccount(AppUserDto dto) {
-        if(dto == null)
-        {
-            throw new NullPointerException("DTO is null");
-        }
-        Optional<AppUser> optionalAppUser = repository.findAppUserByEmail(dto.getEmail());
-        if(optionalAppUser.isPresent())
-        {
-            throw new ObjAlreadyExistsException("This app user is already exists with email :"+dto.getEmail());
-        }
-        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-        AppUser user = AppUserMapper.mapToAccount(dto);
-        repository.save(user);
-        return dto;
-    }
 
     @Transactional
     @Override

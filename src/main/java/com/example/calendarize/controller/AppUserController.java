@@ -3,6 +3,7 @@ package com.example.calendarize.controller;
 import com.example.calendarize.dto.AppUserDto;
 import com.example.calendarize.entity.AppUser;
 import com.example.calendarize.repository.AppUserRepository;
+import com.example.calendarize.service.IAppUserService;
 import com.example.calendarize.service.impl.AppUserServiceImpl;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.Response;
@@ -18,7 +19,7 @@ import java.util.List;
 public class AppUserController {
 
     @Autowired
-    private AppUserServiceImpl appUserService;
+    private IAppUserService appUserService;
 
     @GetMapping("/user")
     public ResponseEntity<List<AppUserDto>> getAllUsers()
@@ -28,12 +29,6 @@ public class AppUserController {
     @GetMapping("user/{id}")
     public ResponseEntity<AppUserDto> getUser(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(appUserService.getAccountById(id));
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<AppUserDto> createAppUser(@RequestBody AppUserDto dto)
-    {
-        return ResponseEntity.status(HttpStatus.OK).body(appUserService.createAccount(dto));
     }
 
     @PutMapping("/user")
