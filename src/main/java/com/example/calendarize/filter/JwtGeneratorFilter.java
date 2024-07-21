@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
+import org.springframework.lang.NonNullApi;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,10 +24,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class JwtGeneratorFilter extends OncePerRequestFilter {
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("filter");
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication!=null){
+            System.out.println("not null");
             SecretKey secretKey = Keys.hmacShaKeyFor(SecurityConstant.JWT_KEY.getBytes(StandardCharsets.UTF_8));
             String jwt = Jwts.builder().issuer("PCT").subject("JWT TOKEN")
                     .claim("email",authentication.getName())
@@ -40,7 +45,7 @@ public class JwtGeneratorFilter extends OncePerRequestFilter {
     }
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !request.getServletPath().equals("/api/auth/signin")||!request.getServletPath().equals("/api/auth/signup");
+        return !request.getServletPath().startsWith("/api/auth");
     }
     private String authoritiesToString(Collection<? extends GrantedAuthority> authoritySet)
     {

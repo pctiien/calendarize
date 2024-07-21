@@ -12,6 +12,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
@@ -35,6 +36,7 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
                 String authorities = String.valueOf(claims.get("authorities"));
                 Authentication auth = new UsernamePasswordAuthenticationToken(email,null,
                         AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+                SecurityContextHolder.getContext().setAuthentication(auth);
 
             }catch(Exception e)
             {
@@ -45,6 +47,6 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
     }
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getServletPath().equals("/api/auth/signup")||request.getServletPath().equals("/api/auth/signin");
+        return request.getServletPath().startsWith("/api/auth");
     }
 }

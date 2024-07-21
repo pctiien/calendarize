@@ -48,7 +48,7 @@ public class AuthServiceImpl implements IAuthService {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
             );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+               // SecurityContextHolder.getContext().setAuthentication(authentication);
             return dto;
         } catch (Exception e) {
             throw new BadCredentialsException("Invalid credentials");

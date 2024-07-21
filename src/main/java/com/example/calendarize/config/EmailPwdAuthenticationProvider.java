@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -36,16 +37,10 @@ public class EmailPwdAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        if(repository!=null)
-        {
-            System.out.println("kaka");
-
-        }else{
-            System.out.println("null");
-
-        }
         String email = authentication.getName();
         String pwd = authentication.getCredentials().toString();
+        System.out.println("hehe");
+
         assert repository != null;
         Optional<AppUser> user = repository.findAppUserByEmail(email);
 
@@ -55,7 +50,9 @@ public class EmailPwdAuthenticationProvider implements AuthenticationProvider {
         }
         if(passwordEncoder.matches(pwd,user.get().getPassword()))
         {
-            return new UsernamePasswordAuthenticationToken(email,pwd,getGrantedAuthorities(user.get().getAuthorities()));
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email,pwd,getGrantedAuthorities(user.get().getAuthorities()));
+            SecurityContextHolder.getContext().setAuthentication(token);
+            return token;
         }else{
 
             throw new BadCredentialsException("Invalid password");
