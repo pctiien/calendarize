@@ -3,6 +3,8 @@ package com.example.calendarize.config;
 import com.example.calendarize.entity.AppUser;
 import com.example.calendarize.entity.Authority;
 import com.example.calendarize.repository.AppUserRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -23,17 +25,30 @@ import java.util.Set;
 @Component
 public class EmailPwdAuthenticationProvider implements AuthenticationProvider {
 
-    @Autowired
-    private AppUserRepository repository;
+    private final AppUserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public EmailPwdAuthenticationProvider(AppUserRepository repository, PasswordEncoder passwordEncoder) {
+        this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        if(repository!=null)
+        {
+            System.out.println("kaka");
+
+        }else{
+            System.out.println("null");
+
+        }
         String email = authentication.getName();
         String pwd = authentication.getCredentials().toString();
+        assert repository != null;
         Optional<AppUser> user = repository.findAppUserByEmail(email);
+
         if(user.isEmpty())
         {
             throw new BadCredentialsException("User is not existed");
@@ -42,6 +57,7 @@ public class EmailPwdAuthenticationProvider implements AuthenticationProvider {
         {
             return new UsernamePasswordAuthenticationToken(email,pwd,getGrantedAuthorities(user.get().getAuthorities()));
         }else{
+
             throw new BadCredentialsException("Invalid password");
         }
     }

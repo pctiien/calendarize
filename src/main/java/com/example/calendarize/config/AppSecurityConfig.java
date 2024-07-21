@@ -3,8 +3,10 @@ package com.example.calendarize.config;
 
 import com.example.calendarize.filter.JwtGeneratorFilter;
 import com.example.calendarize.filter.JwtValidatorFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,13 +20,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class AppSecurityConfig {
+
+    private final EmailPwdAuthenticationProvider authenticationProvider;
+
+    @Autowired
+    public AppSecurityConfig(@Lazy EmailPwdAuthenticationProvider authenticationProvider) {
+        this.authenticationProvider = authenticationProvider;
+    }
+
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(co->co.disable())
                 .csrf(cs->cs.disable())
                 .authorizeHttpRequests(request ->
-                      request.anyRequest().permitAll()
+                                request.requestMatchers("/api/auth/**").permitAll()
+                                        .anyRequest().permitAll()
                 )
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
@@ -42,7 +53,7 @@ public class AppSecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(new EmailPwdAuthenticationProvider());
+        authenticationManagerBuilder.authenticationProvider(authenticationProvider);
         return authenticationManagerBuilder.build();
     }
 }

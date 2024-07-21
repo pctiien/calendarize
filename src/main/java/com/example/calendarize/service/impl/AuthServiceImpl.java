@@ -34,7 +34,6 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     @Transactional
     public AppUserDto signUp(AppUserDto dto) {
-        System.out.println(dto);
         if(dto == null) throw new NullPointerException("DTO is null");
         Optional<AppUser> optionUser = repository.findAppUserByEmail(dto.getEmail());
         if(optionUser.isPresent()) throw new ObjAlreadyExistsException("This email already existed");
@@ -43,7 +42,6 @@ public class AuthServiceImpl implements IAuthService {
         repository.save(user);
         return dto;
     }
-    @Transactional
     @Override
     public LoginDto signIn(LoginDto dto) {
         try {
