@@ -2,6 +2,8 @@ package com.example.calendarize.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -52,6 +54,13 @@ public class AppUser {
     )
     private Set<Authority> authorities;
 
+    public void addProject(Project project){
+        if(projects==null)
+        {
+            projects = new HashSet<>();
+        }
+        projects.add(project);
+    }
 
 
 }

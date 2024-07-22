@@ -1,0 +1,46 @@
+package com.example.calendarize.mapper;
+
+import com.example.calendarize.dto.ProjectDto;
+import com.example.calendarize.entity.Project;
+import com.example.calendarize.repository.AppUserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
+public class ProjectMapper {
+
+    private final AppUserRepository appUserRepository;
+
+    @Autowired
+    public ProjectMapper(AppUserRepository _appUserRepository)
+    {
+        appUserRepository = _appUserRepository;
+    }
+
+    public List<ProjectDto> mapToDto(List<Project> projects)
+    {
+        return projects.stream().map(
+              project -> ProjectDto.builder()
+                      .name(project.getName())
+                      .description(project.getDescription())
+                      .startDate(project.getStartDate())
+                      .endDate(project.getEndDate())
+                      .hostId(project.getUser().getId())
+                      .build()
+        ).collect(Collectors.toList());
+    }
+    public Project mapToProject(ProjectDto dto){
+        return Project.builder().description(dto.getDescription())
+                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
+                .name(dto.getName())
+                .user(appUserRepository.findById(dto.getHostId()).get())
+                .build();
+    }
+
+
+}

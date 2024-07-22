@@ -3,7 +3,9 @@ package com.example.calendarize.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -15,6 +17,7 @@ import java.util.Set;
 @Builder
 public class Project {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public Long id;
 
@@ -25,15 +28,15 @@ public class Project {
     public String description;
 
     @Column(name = "startDate")
-    public Date startDate;
+    public LocalDateTime startDate;
 
     @Column(name = "endDate")
-    public Date endDate;
+    public LocalDateTime endDate;
 
     @Column(name = "status")
     public int status;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hostId",referencedColumnName = "id")
     private AppUser user ;
 
@@ -42,11 +45,22 @@ public class Project {
     })
     private Set<ProjectTask> tasks;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "Project_Member",
             joinColumns = @JoinColumn(name ="project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<AppUser> users;
+
+    public void addMember(AppUser member)
+    {
+        if(users== null)
+        {
+            users = new HashSet<>();
+        }
+        users.add(member);
+    }
+
+
 }
