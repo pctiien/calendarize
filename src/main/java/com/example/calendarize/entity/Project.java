@@ -33,9 +33,6 @@ public class Project {
     @Column(name = "endDate")
     public LocalDateTime endDate;
 
-    @Column(name = "status")
-    public int status;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hostId",referencedColumnName = "id")
     private AppUser user ;
@@ -52,6 +49,10 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<AppUser> users;
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {})
+    @JoinColumn(name = "status")
+    private TaskStatus taskStatus;
 
     public void addMember(AppUser member)
     {

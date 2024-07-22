@@ -61,6 +61,21 @@ create table User_Authority(
 	constraint User_Authority_User_FK foreign key(user_id) references App_User(id),
 	constraint User_Authority_Authority_FK foreign key(authority_id) references Authority(id)
 )
+
+create table Task_Status(
+	task_status_id int,
+	name nvarchar(50),
+	constraint Task_Status_PK primary key(task_status_id)
+)
+
+insert into Task_Status(
+	task_status_id,name
+)
+values(0,'Processing'),(1,'Done')
+
+alter table Project 
+add constraint Project_TaskStatus_FK foreign key([status]) references Task_Status(task_status_id)
+
 /*
 use master;
 go

@@ -1,6 +1,7 @@
 package com.example.calendarize.dto;
 
 
+import com.example.calendarize.constant.TaskStatusConstant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +23,6 @@ public class TaskDto {
     protected LocalDateTime startDate;
 
     protected LocalDateTime endDate;
+
+    protected String status = TaskStatusConstant.DEFAULT_STATUS;
 }

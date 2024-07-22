@@ -3,6 +3,7 @@ package com.example.calendarize.mapper;
 import com.example.calendarize.dto.ProjectDto;
 import com.example.calendarize.entity.Project;
 import com.example.calendarize.repository.AppUserRepository;
+import com.example.calendarize.repository.TaskStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,14 @@ import java.util.stream.Collectors;
 public class ProjectMapper {
 
     private final AppUserRepository appUserRepository;
+    private final TaskStatusRepository taskStatusRepository;
+
 
     @Autowired
-    public ProjectMapper(AppUserRepository _appUserRepository)
+    public ProjectMapper(AppUserRepository _appUserRepository,TaskStatusRepository _taskStatusRepository)
     {
         appUserRepository = _appUserRepository;
+        taskStatusRepository = _taskStatusRepository;
     }
 
     public List<ProjectDto> mapToDto(List<Project> projects)
@@ -30,6 +34,7 @@ public class ProjectMapper {
                       .startDate(project.getStartDate())
                       .endDate(project.getEndDate())
                       .hostId(project.getUser().getId())
+                      .status(project.getTaskStatus().getName())
                       .build()
         ).collect(Collectors.toList());
     }
@@ -39,6 +44,7 @@ public class ProjectMapper {
                 .endDate(dto.getEndDate())
                 .name(dto.getName())
                 .user(appUserRepository.findById(dto.getHostId()).get())
+                .taskStatus(taskStatusRepository.findByName(dto.getStatus()).get())
                 .build();
     }
 
