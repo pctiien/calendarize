@@ -1,5 +1,6 @@
 package com.example.calendarize.filter;
 
+import com.example.calendarize.config.JwtTokenProvider;
 import com.example.calendarize.constant.SecurityConstant;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -7,54 +8,45 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
-import org.springframework.lang.NonNullApi;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.crypto.SecretKey;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 
 public class JwtGeneratorFilter extends OncePerRequestFilter {
 
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public JwtGeneratorFilter(JwtTokenProvider _jwtTokenProvider)
+    {
+        this.jwtTokenProvider = _jwtTokenProvider;
+    }
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("filter");
+    protected void doFilterInternal(
+            @Nullable HttpServletRequest request,@Nullable HttpServletResponse response,@Nullable FilterChain filterChain
+    ) throws ServletException, IOException {
+
+        System.out.println("Jwt generate process");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication!=null){
-            System.out.println("not null");
-            SecretKey secretKey = Keys.hmacShaKeyFor(SecurityConstant.JWT_KEY.getBytes(StandardCharsets.UTF_8));
-            String jwt = Jwts.builder().issuer("PCT").subject("JWT TOKEN")
-                    .claim("email",authentication.getName())
-                    .claim("authorities",authoritiesToString(authentication.getAuthorities()))
-                    .issuedAt(new Date())
-                    .expiration(new Date((new Date()).getTime() + 30000000))
-                    .signWith(secretKey).compact();
-            response.setHeader(SecurityConstant.JWT_HEADER,jwt);
-        }
-        filterChain.doFilter(request,response);
+
+        String jwtToken = jwtTokenProvider.generateToken(authentication);
+
+        System.out.printf("Jwt token generated : %s \n",jwtToken);
+
+        assert response != null;
+        response.setHeader(SecurityConstant.JWT_HEADER, jwtToken);
+
+        assert filterChain != null;
+        filterChain.doFilter(request, response);
     }
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !request.getServletPath().startsWith("/api/auth");
+        return !request.getServletPath().startsWith("/api/auth/signin");
     }
-    private String authoritiesToString(Collection<? extends GrantedAuthority> authoritySet)
-    {
-        Set<String> authorities = new HashSet<>();
-        for(GrantedAuthority authority : authoritySet)
-        {
-            authorities.add(authority.getAuthority());
-        }
-        return String.join(",",authorities);
-    }
+
 
 }

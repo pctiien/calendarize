@@ -6,11 +6,15 @@ spring:
     password: Adteamkingp3
     url: jdbc:sqlserver://DESKTOP-0O190JQ\\SQLEXPRESS:1433;databaseName=calendarize;encrypt=true;trustServerCertificate=true
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-
   jpa:
     database-platform: org.hibernate.dialect.SQLServerDialect
     show-sql: true
     hibernate:
       ddl-auto: none
+  security:
+    jwt:
+      secret-key: jxgEQeXHuPq8VdbyYFNkANdudQ53YUn4
+      expiration: 43200000
 server:
   port: 8080
+

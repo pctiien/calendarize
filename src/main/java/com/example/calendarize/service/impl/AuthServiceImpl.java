@@ -22,14 +22,16 @@ import java.util.Optional;
 @Service
 public class AuthServiceImpl implements IAuthService {
 
+    private final AppUserRepository repository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
     @Autowired
-    private AppUserRepository repository;
+    public AuthServiceImpl(AppUserRepository _repository, PasswordEncoder _passwordEncoder, AuthenticationManager _authenticationManager){
+        this.repository = _repository;
+        this.passwordEncoder = _passwordEncoder;
+        this.authenticationManager = _authenticationManager;
+    }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Override
     @Transactional
@@ -48,7 +50,7 @@ public class AuthServiceImpl implements IAuthService {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
             );
-               // SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             return dto;
         } catch (Exception e) {
             throw new BadCredentialsException("Invalid credentials");

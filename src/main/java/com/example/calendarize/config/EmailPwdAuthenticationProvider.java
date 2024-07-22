@@ -3,10 +3,7 @@ package com.example.calendarize.config;
 import com.example.calendarize.entity.AppUser;
 import com.example.calendarize.entity.Authority;
 import com.example.calendarize.repository.AppUserRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -39,9 +35,9 @@ public class EmailPwdAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String pwd = authentication.getCredentials().toString();
-        System.out.println("hehe");
 
         assert repository != null;
+
         Optional<AppUser> user = repository.findAppUserByEmail(email);
 
         if(user.isEmpty())
@@ -50,9 +46,7 @@ public class EmailPwdAuthenticationProvider implements AuthenticationProvider {
         }
         if(passwordEncoder.matches(pwd,user.get().getPassword()))
         {
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email,pwd,getGrantedAuthorities(user.get().getAuthorities()));
-            SecurityContextHolder.getContext().setAuthentication(token);
-            return token;
+            return new UsernamePasswordAuthenticationToken(email,pwd,getGrantedAuthorities(user.get().getAuthorities()));
         }else{
 
             throw new BadCredentialsException("Invalid password");
@@ -61,9 +55,7 @@ public class EmailPwdAuthenticationProvider implements AuthenticationProvider {
     private List<GrantedAuthority> getGrantedAuthorities(Set<Authority> authorities)
     {
         List<GrantedAuthority> authorityList = new ArrayList<>();
-        authorities.forEach(authority->{
-            authorityList.add(new SimpleGrantedAuthority(authority.getName()));
-        });
+        authorities.forEach(authority-> authorityList.add(new SimpleGrantedAuthority(authority.getName())));
         return authorityList;
     }
 
