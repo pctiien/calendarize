@@ -3,6 +3,8 @@ package com.example.calendarize.config;
 
 import com.example.calendarize.filter.JwtGeneratorFilter;
 import com.example.calendarize.filter.JwtValidatorFilter;
+import com.example.calendarize.repository.TokenRepository;
+import com.example.calendarize.service.impl.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,16 +24,20 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableWebSecurity
 public class AppSecurityConfig  {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenService tokenService;
+
+    private final TokenRepository tokenRepository;
+
 
     private final EmailPwdAuthenticationProvider authenticationProvider;
 
     @Autowired
     public AppSecurityConfig(@Lazy EmailPwdAuthenticationProvider authenticationProvider,
-        JwtTokenProvider _jwtTokenProvider
+        JwtTokenProvider _jwtTokenProvider,TokenService _tokenService,TokenRepository _tokenRepository
     ) {
         this.authenticationProvider = authenticationProvider;
-        this.jwtTokenProvider = _jwtTokenProvider;
+        this.tokenRepository = _tokenRepository;
+        this.tokenService = _tokenService;
     }
 
     @Bean
@@ -39,8 +45,8 @@ public class AppSecurityConfig  {
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new JwtValidatorFilter(jwtTokenProvider), BasicAuthenticationFilter.class)
-                .addFilterAfter (new JwtGeneratorFilter(jwtTokenProvider), BasicAuthenticationFilter.class)
+                .addFilterBefore(new JwtValidatorFilter(tokenService,tokenRepository), BasicAuthenticationFilter.class)
+               // .addFilterAfter (new JwtGeneratorFilter(jwtTokenProvider), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()

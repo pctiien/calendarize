@@ -76,6 +76,16 @@ values(0,'Processing'),(1,'Done')
 alter table Project 
 add constraint Project_TaskStatus_FK foreign key([status]) references Task_Status(task_status_id)
 
+create table Token(
+	id bigint identity,
+	token varchar(200),
+	token_type varchar(50),
+	revoked bit,
+	expired bit,
+	user_id bigint,
+	constraint Token_PK primary key(id),
+	constraint Token_User_FK foreign key(user_id) references App_User(id)
+)
 /*
 use master;
 go

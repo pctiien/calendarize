@@ -16,7 +16,8 @@ spring:
   security:
     jwt:
       secret-key: jxgEQeXHuPq8VdbyYFNkANdudQ53YUn4
-      expiration: 43200000
+      expiration: 86400000
+      refresh-expiration : 604800000
 server:
   port: 8080
 
