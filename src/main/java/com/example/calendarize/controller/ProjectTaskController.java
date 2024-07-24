@@ -16,10 +16,10 @@ public class ProjectTaskController {
 
     private final IProjectTaskService projectTaskService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<?> getProjectTasks(@PathVariable Long userId)
+    @GetMapping("/{projectId}")
+    public ResponseEntity<?> getProjectTasks(@PathVariable Long projectId)
     {
-        return ResponseEntity.status(HttpStatus.OK).body(projectTaskService.getProjectTasks(userId));
+        return ResponseEntity.status(HttpStatus.OK).body(projectTaskService.getProjectTasks(projectId));
     }
 
     @PostMapping
