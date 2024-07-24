@@ -29,6 +29,7 @@ public class ProjectMapper {
     {
         return projects.stream().map(
               project -> ProjectDto.builder()
+                      .id(project.getId())
                       .name(project.getName())
                       .description(project.getDescription())
                       .startDate(project.getStartDate())

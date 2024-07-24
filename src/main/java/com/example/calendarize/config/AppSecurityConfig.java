@@ -1,7 +1,6 @@
 package com.example.calendarize.config;
 
 
-import com.example.calendarize.filter.JwtGeneratorFilter;
 import com.example.calendarize.filter.JwtValidatorFilter;
 import com.example.calendarize.repository.TokenRepository;
 import com.example.calendarize.service.impl.TokenService;
@@ -33,7 +32,7 @@ public class AppSecurityConfig  {
 
     @Autowired
     public AppSecurityConfig(@Lazy EmailPwdAuthenticationProvider authenticationProvider,
-        JwtTokenProvider _jwtTokenProvider,TokenService _tokenService,TokenRepository _tokenRepository
+        TokenService _tokenService,TokenRepository _tokenRepository
     ) {
         this.authenticationProvider = authenticationProvider;
         this.tokenRepository = _tokenRepository;
@@ -46,7 +45,6 @@ public class AppSecurityConfig  {
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtValidatorFilter(tokenService,tokenRepository), BasicAuthenticationFilter.class)
-               // .addFilterAfter (new JwtGeneratorFilter(jwtTokenProvider), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()

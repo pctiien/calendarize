@@ -2,6 +2,7 @@ package com.example.calendarize.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -10,22 +11,26 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 public class Task {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Column(name = "id")
-    public Long id;
+    private Long id;
 
     @Column(name = "name")
-    public String name;
+    private String name;
 
     @Column(name = "description")
-    public String description;
+    private String description;
 
     @Column(name = "startDate")
-    public LocalDateTime startDate;
+    private LocalDateTime startDate;
 
     @Column(name = "endDate")
-    public LocalDateTime endDate;
+    private LocalDateTime endDate;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "status")
+    private TaskStatus status;
 }

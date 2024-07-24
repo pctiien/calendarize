@@ -1,6 +1,5 @@
 package com.example.calendarize.filter;
 
-import com.example.calendarize.config.JwtTokenProvider;
 import com.example.calendarize.constant.SecurityConstant;
 import com.example.calendarize.entity.Token;
 import com.example.calendarize.repository.TokenRepository;

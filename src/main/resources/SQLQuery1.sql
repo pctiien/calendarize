@@ -36,8 +36,10 @@ create table Life_Task(
 	startDate datetime,
 	endDate datetime,
 	user_id bigint,
+	[status] int,
 	constraint LifeTask_PK primary key(id),
-	constraint LifeTask_User_FK foreign key(user_id) references App_User(id)
+	constraint LifeTask_User_FK foreign key(user_id) references App_User(id),
+	constraint LifeTask_TaskStatus_FK foreign key([status]) references Task_Status(task_status_id)
 )
 create table Project_Task(
 	id bigint identity,
@@ -46,8 +48,10 @@ create table Project_Task(
 	startDate datetime,
 	endDate datetime,
 	project_id bigint,
+	[status] int,
 	constraint ProjectTask_PK primary key(id),
-	constraint ProjectTask_Project_FK foreign key(project_id) references Project(id)
+	constraint ProjectTask_Project_FK foreign key(project_id) references Project(id),
+	constraint ProjectTask_TaskStatus_FK foreign key([status]) references Task_Status(task_status_id)
 )
 create table Authority(
 	id int identity,
@@ -78,7 +82,7 @@ add constraint Project_TaskStatus_FK foreign key([status]) references Task_Statu
 
 create table Token(
 	id bigint identity,
-	token varchar(200),
+	token varchar(500),
 	token_type varchar(50),
 	revoked bit,
 	expired bit,
@@ -86,6 +90,8 @@ create table Token(
 	constraint Token_PK primary key(id),
 	constraint Token_User_FK foreign key(user_id) references App_User(id)
 )
+
+
 /*
 use master;
 go
