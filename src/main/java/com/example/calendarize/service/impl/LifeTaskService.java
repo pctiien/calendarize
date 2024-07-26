@@ -15,9 +15,10 @@ import com.example.calendarize.service.ILifeTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -77,4 +78,20 @@ public class LifeTaskService implements ILifeTaskService {
 
         return lifeTaskMapper.mapToDtos(lifeTask.stream().toList()).get(0);
     }
+
+    @Override
+    public List<List<TaskDto>> getLifeTaskBetweenDates(Long userId, LocalDateTime startDate, LocalDateTime endDate) {
+        Optional<List<LifeTask>> tasks = lifeTaskRepository.findAllByUserIdBetweenDate(userId,startDate,endDate);
+        return organizeTasksByDate(lifeTaskMapper.mapToDtos(tasks.orElse(new ArrayList<>())));
+    }
+
+    private List<List<TaskDto>> organizeTasksByDate(List<TaskDto> dto)
+    {
+        Map<LocalDate,List<TaskDto>> tasksByDate = dto.stream().collect(Collectors.groupingBy(task->task.getStartDate().toLocalDate()));
+        List<List<TaskDto>> listOfLists = new ArrayList<>(tasksByDate.values());
+        listOfLists.forEach(list->list.sort(Comparator.comparing(TaskDto::getStartDate)));
+        return listOfLists;
+    }
+
+
 }
