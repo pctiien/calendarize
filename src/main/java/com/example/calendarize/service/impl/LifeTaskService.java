@@ -85,11 +85,25 @@ public class LifeTaskService implements ILifeTaskService {
         return organizeTasksByDate(lifeTaskMapper.mapToDtos(tasks.orElse(new ArrayList<>())));
     }
 
+    @Override
+    public TaskDto updateTask(TaskDto dto) {
+        Optional<LifeTask> entity = lifeTaskRepository.findById(dto.getId());
+        if(entity.isEmpty()) throw new ResourceNotFoundException("Lifetask","id",dto.getId().toString());
+        LifeTask lifeTask = entity.get();
+        lifeTask.setName(dto.getName());
+        lifeTask.setDescription(dto.getDescription());
+        lifeTask.setStartDate(dto.getStartDate());
+        lifeTask.setEndDate(dto.getEndDate());
+        lifeTaskRepository.save(lifeTask);
+        return dto;
+    }
+
     private List<List<TaskDto>> organizeTasksByDate(List<TaskDto> dto)
     {
         Map<LocalDate,List<TaskDto>> tasksByDate = dto.stream().collect(Collectors.groupingBy(task->task.getStartDate().toLocalDate()));
         List<List<TaskDto>> listOfLists = new ArrayList<>(tasksByDate.values());
         listOfLists.forEach(list->list.sort(Comparator.comparing(TaskDto::getStartDate)));
+        listOfLists.sort(Comparator.comparing(t->t.get(0).getStartDate()));
         return listOfLists;
     }
 

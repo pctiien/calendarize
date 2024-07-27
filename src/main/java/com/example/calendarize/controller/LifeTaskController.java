@@ -1,6 +1,7 @@
 package com.example.calendarize.controller;
 
 import com.example.calendarize.dto.LifeTaskDto;
+import com.example.calendarize.dto.TaskDto;
 import com.example.calendarize.service.ILifeTaskService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,11 @@ public class LifeTaskController {
         LocalDateTime startDate = start.atStartOfDay();
         LocalDateTime endDate = end.atTime(LocalTime.MAX);
         return ResponseEntity.ok().body(lifeTaskService.getLifeTaskBetweenDates(userId,startDate,endDate));
+    }
+    @PutMapping
+    public ResponseEntity<?> updateTask(@RequestBody TaskDto dto)
+    {
+        return ResponseEntity.ok().body(lifeTaskService.updateTask(dto));
     }
 
 }
