@@ -35,7 +35,7 @@ public class LifeTaskController {
         return ResponseEntity.ok(lifeTaskService.addLifeTask(dto));
     }
 
-    @PostMapping("/{taskId}")
+    @PutMapping("/{taskId}")
     public ResponseEntity<?> doneTask(@PathVariable Long taskId)
     {
         return ResponseEntity.ok(lifeTaskService.doneTask(taskId));
