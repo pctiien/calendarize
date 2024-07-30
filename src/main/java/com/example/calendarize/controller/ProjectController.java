@@ -36,6 +36,11 @@ public class ProjectController {
         projectService.addMemberToProject(projectId,memberId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
+    @PostMapping("/{projectId}/members")
+    public ResponseEntity<Void> addMemberToProject(@PathVariable Long projectId,@RequestParam String email)
+    {
+        projectService.addMemberToProjectByEmail(projectId,email);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
 }

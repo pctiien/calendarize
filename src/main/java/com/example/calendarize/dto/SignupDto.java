@@ -1,6 +1,5 @@
 package com.example.calendarize.dto;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AppUserDto {
+public class SignupDto {
     private String name;
     private String email;
     private String password;

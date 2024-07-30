@@ -61,4 +61,14 @@ public class ProjectService implements IProjectService {
         projectRepository.save(project.get());
     }
 
+    @Override
+    public void addMemberToProjectByEmail(Long projectId, String email) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        if(project.isEmpty()) throw new ResourceNotFoundException("Project","id",projectId.toString());
+        Optional<AppUser> newMember = appUserRepository.findAppUserByEmail(email);
+        if(newMember.isEmpty()) throw new ResourceNotFoundException("User","email",email);
+        project.get().addMember(newMember.get());
+        projectRepository.save(project.get());
+    }
+
 }

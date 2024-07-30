@@ -23,7 +23,7 @@ public class ProjectTaskMapper {
     }
     public List<TaskDto> mapToDtos(List<ProjectTask> projectTasks){
         return projectTasks.stream().map(
-                projectTask -> ProjectTaskDto.builder()
+                projectTask -> TaskDto.builder()
                         .name(projectTask.getName())
                         .id(projectTask.getId())
                         .endDate(projectTask.getEndDate())

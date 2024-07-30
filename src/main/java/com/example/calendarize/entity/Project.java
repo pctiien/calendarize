@@ -42,7 +42,7 @@ public class Project {
     })
     private Set<ProjectTask> tasks;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "Project_Member",
             joinColumns = @JoinColumn(name ="project_id"),

@@ -1,9 +1,10 @@
 package com.example.calendarize.service.impl;
 
 import com.example.calendarize.constant.SecurityConstant;
-import com.example.calendarize.dto.AppUserDto;
 import com.example.calendarize.dto.AuthenticationResponse;
 import com.example.calendarize.dto.LoginDto;
+import com.example.calendarize.dto.SignupDto;
+import com.example.calendarize.dto.UserDto;
 import com.example.calendarize.entity.AppUser;
 import com.example.calendarize.entity.Token;
 import com.example.calendarize.entity.TokenType;
@@ -47,7 +48,7 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     @Transactional
-    public AppUserDto signUp(AppUserDto dto) {
+    public SignupDto signUp(SignupDto dto) {
         if(dto == null) throw new NullPointerException("DTO is null");
         Optional<AppUser> optionUser = repository.findAppUserByEmail(dto.getEmail());
         if(optionUser.isPresent()) throw new ObjAlreadyExistsException("This email already existed");

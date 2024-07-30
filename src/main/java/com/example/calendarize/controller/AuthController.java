@@ -1,7 +1,8 @@
 package com.example.calendarize.controller;
 
-import com.example.calendarize.dto.AppUserDto;
 import com.example.calendarize.dto.LoginDto;
+import com.example.calendarize.dto.SignupDto;
+import com.example.calendarize.dto.UserDto;
 import com.example.calendarize.repository.AppUserRepository;
 import com.example.calendarize.service.IAppUserService;
 import com.example.calendarize.service.IAuthService;
@@ -26,7 +27,7 @@ public class AuthController {
     private IAuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<AppUserDto> signUp(@RequestBody AppUserDto dto){
+    public ResponseEntity<?> signUp(@RequestBody SignupDto dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUp(dto));
     }
     @PostMapping("/signin")

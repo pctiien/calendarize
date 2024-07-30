@@ -1,13 +1,14 @@
 package com.example.calendarize.mapper;
 
-import com.example.calendarize.dto.AppUserDto;
+import com.example.calendarize.dto.SignupDto;
+import com.example.calendarize.dto.UserDto;
 import com.example.calendarize.entity.AppUser;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class AppUserMapper {
-    public static AppUser mapToAccount(AppUserDto dto)
+    public static AppUser mapToAccount(SignupDto dto)
     {
         return AppUser.builder()
                 .email(dto.getEmail())
@@ -15,26 +16,24 @@ public class AppUserMapper {
                 .password(dto.getPassword())
                 .build();
     }
-    public static AppUserDto mapToDto(AppUser user)
+    public static AppUser mapToAccount(UserDto dto)
     {
-        return AppUserDto.builder()
-                .email(user.getEmail())
-                .name(user.getName())
-                .password(user.getPassword())
+        return AppUser.builder()
+                .email(dto.getEmail())
+                .name(dto.getName())
                 .build();
     }
-    public static List<AppUser> mapToAccount(List<AppUserDto> dtos){
-        return dtos.stream().map(dto->AppUser.builder()
-                .email(dto.getEmail())
-                .password(dto.getPassword())
-                .name(dto.getName())
-                .build()
-        ).collect(Collectors.toList());
+    public static UserDto mapToDto(AppUser user)
+    {
+        return UserDto.builder()
+                .email(user.getEmail())
+                .name(user.getName())
+                .build();
     }
-    public static List<AppUserDto> mapToDto(List<AppUser> accounts){
-        return accounts.stream().map(account->AppUserDto.builder()
+
+    public static List<UserDto> mapToDto(List<AppUser> accounts){
+        return accounts.stream().map(account->UserDto.builder()
                 .email(account.getEmail())
-                .password(account.getPassword())
                 .name(account.getName())
                 .build()
         ).collect(Collectors.toList());

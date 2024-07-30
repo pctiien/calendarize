@@ -1,6 +1,7 @@
 package com.example.calendarize.mapper;
 
 import com.example.calendarize.dto.ProjectDto;
+import com.example.calendarize.dto.UserDto;
 import com.example.calendarize.entity.Project;
 import com.example.calendarize.repository.AppUserRepository;
 import com.example.calendarize.repository.TaskStatusRepository;
@@ -36,6 +37,9 @@ public class ProjectMapper {
                       .endDate(project.getEndDate())
                       .hostId(project.getUser().getId())
                       .status(project.getTaskStatus().getName())
+                      .users(project.getUsers().stream().map(
+                              user->UserDto.builder().email(user.getEmail()).name(user.getName()).build()
+                      ).collect(Collectors.toSet()))
                       .build()
         ).collect(Collectors.toList());
     }

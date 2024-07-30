@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,14 +49,17 @@ public class ProjectTaskService implements IProjectTaskService {
 
         projectTaskRepository.save(projectTask);
 
+        dto.setId(projectTask.getId());
+
         return dto;
     }
 
     @Override
     public List<TaskDto> getProjectTasks(Long projectId) {
         Optional<List<ProjectTask>> lifeTasks = projectTaskRepository.findAllByProjectId(projectId);
-        return projectTaskMapper.mapToDtos(lifeTasks.orElse(new ArrayList<>()));
-
+        List<TaskDto> result = projectTaskMapper.mapToDtos(lifeTasks.orElse(new ArrayList<>()));
+        result.sort(Comparator.comparing(TaskDto::getStartDate));
+        return result;
     }
 
     @Override

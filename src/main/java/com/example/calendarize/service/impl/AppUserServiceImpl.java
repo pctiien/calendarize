@@ -1,6 +1,6 @@
 package com.example.calendarize.service.impl;
 
-import com.example.calendarize.dto.AppUserDto;
+import com.example.calendarize.dto.UserDto;
 import com.example.calendarize.entity.AppUser;
 import com.example.calendarize.exception.ObjAlreadyExistsException;
 import com.example.calendarize.exception.ResourceNotFoundException;
@@ -28,7 +28,7 @@ public class AppUserServiceImpl implements IAppUserService {
 
     @Transactional
     @Override
-    public AppUserDto updateAccount(AppUserDto dto) {
+    public UserDto updateAccount(UserDto dto) {
         if(dto == null)
         {
             throw new NullPointerException("DTO is null");
@@ -46,7 +46,7 @@ public class AppUserServiceImpl implements IAppUserService {
 
     @Transactional
     @Override
-    public AppUserDto deleteAccount(AppUserDto dto) {
+    public UserDto deleteAccount(UserDto dto) {
         if(dto == null)
         {
             throw new NullPointerException("DTO is null");
@@ -62,12 +62,12 @@ public class AppUserServiceImpl implements IAppUserService {
 
     @Transactional
     @Override
-    public AppUserDto deleteAccount(String email) {
+    public UserDto deleteAccount(String email) {
         return null;
     }
 
     @Override
-    public AppUserDto getAccountById(Long id) {
+    public UserDto getAccountById(Long id) {
         Optional<AppUser> optionalAppUser = repository.findById(id);
         if(optionalAppUser.isEmpty())
         {
@@ -77,7 +77,7 @@ public class AppUserServiceImpl implements IAppUserService {
     }
 
     @Override
-    public AppUserDto getAccountByEmail(String email) {
+    public UserDto getAccountByEmail(String email) {
         Optional<AppUser> optionalAppUser = repository.findAppUserByEmail(email);
         if(optionalAppUser.isEmpty())
         {
@@ -87,7 +87,7 @@ public class AppUserServiceImpl implements IAppUserService {
     }
 
     @Override
-    public List<AppUserDto> getAllAccount() {
+    public List<UserDto> getAllAccount() {
         return AppUserMapper.mapToDto(repository.findAll());
     }
 }

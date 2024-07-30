@@ -28,7 +28,7 @@ public class ProjectTaskController {
         return ResponseEntity.ok(projectTaskService.createProjectTask(dto));
     }
 
-    @PostMapping("/{taskId}")
+    @PutMapping("/{taskId}")
     public ResponseEntity<?> doneTask(@PathVariable Long taskId)
     {
         return ResponseEntity.ok(projectTaskService.doneTask(taskId));

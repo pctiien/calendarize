@@ -1,6 +1,6 @@
 package com.example.calendarize.controller;
 
-import com.example.calendarize.dto.AppUserDto;
+import com.example.calendarize.dto.UserDto;
 import com.example.calendarize.entity.AppUser;
 import com.example.calendarize.repository.AppUserRepository;
 import com.example.calendarize.service.IAppUserService;
@@ -22,17 +22,17 @@ public class AppUserController {
     private IAppUserService appUserService;
 
     @GetMapping("/user")
-    public ResponseEntity<List<AppUserDto>> getAllUsers()
+    public ResponseEntity<?> getAllUsers()
     {
         return ResponseEntity.status(HttpStatus.OK).body(appUserService.getAllAccount());
     }
     @GetMapping("user/{id}")
-    public ResponseEntity<AppUserDto> getUser(@PathVariable Long id){
+    public ResponseEntity<?> getUser(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(appUserService.getAccountById(id));
     }
 
     @PutMapping("/user")
-    public ResponseEntity<AppUserDto> updateAppUser(@RequestBody AppUserDto dto)
+    public ResponseEntity<?> updateAppUser(@RequestBody UserDto dto)
     {
         return ResponseEntity.status(HttpStatus.OK).body(appUserService.updateAccount(dto));
     }
