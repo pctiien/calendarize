@@ -75,7 +75,7 @@ create table Task_Status(
 insert into Task_Status(
 	task_status_id,name
 )
-values(0,'Processing'),(1,'Done')
+values(0,'Processing'),(1,'Done'),(2,'Overdue')
 
 alter table Project 
 add constraint Project_TaskStatus_FK foreign key([status]) references Task_Status(task_status_id)
